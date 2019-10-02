@@ -88,4 +88,6 @@ public class SetmealController {
             return null;
         }
     }
+
+    public void xxx() {}
 }
