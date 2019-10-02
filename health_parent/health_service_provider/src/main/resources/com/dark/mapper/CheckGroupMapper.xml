@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dark.mapper.CheckGroupMapper">
+    <!--增.模板-->
+    <!--<insert id="add" parameterType="">
+        insert into user values (#{id},#{username},#{password})
+    </insert>-->
+
+    <insert id="addGroup" parameterType="checkGroup">
+        insert into t_checkgroup values (null,#{code},#{name},#{helpCode},#{sex},#{remark},#{attention})
+        <selectKey resultType="int" keyProperty="id" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <insert id="addGroupAnnoItem" parameterType="map">
+        insert into t_checkgroup_checkitem values
+        <foreach collection="list" item="fk" separator=",">
+            (#{fk.groupId},#{fk.itemId})
+        </foreach>
+    </insert>
+
+    <!--删.模板-->
+    <!--<delete id="delete" parameterType="">
+        delete from user where username = #{username}
+    </delete>-->
+
+    <!--改.模板-->
+    <!--<update id="update" parameterType="">
+        update user set password = #{password} where username = #{username}
+    </update>-->
+
+    <update id="update" parameterType="checkGroup">
+        update t_checkgroup
+        <set>
+            set code=#{code},name=#{name},helpCode=#{helpCode},sex=#{sex},remark=#{remark},attention=#{attention}
+            <if test="code != null and code.length > 0">
+                code = #{code},
+            </if>
+            <if test="name != null and name.length > 0">
+                name = #{name},
+            </if>
+            <if test="helpCode != null and helpCode.length > 0">
+                helpCode = #{helpCode},
+            </if>
+            <if test="sex != null and sex.length > 0">
+                sex = #{sex},
+            </if>
+            <if test="remark != null and remark.length > 0">
+                remark = #{remark},
+            </if>
+            <if test="attention != null and attention.length > 0">
+                attention = #{attention},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--查.模板-->
+    <!--<select id="find" parameterType="" resultType="">
+        select * from user
+    </select>-->
+
+    <select id="findByCondition" parameterType="string" resultType="checkGroup">
+        select * from t_checkgroup
+        <where>
+            <if test="value != null">
+                and code like #{value} or name like #{value} or helpCode like #{value}
+            </if>
+        </where>
+    </select>
+
+</mapper>
