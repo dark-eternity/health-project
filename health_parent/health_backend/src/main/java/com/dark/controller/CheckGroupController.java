@@ -112,4 +112,23 @@ public class CheckGroupController {
         }
         return result;
     }
+
+    @RequestMapping(path = "/deleteById")
+    public Result deleteById(Integer id) {
+        try {
+            //业务逻辑处理正常
+            checkGroupService.deleteById(id);
+            //提示成功信息
+            result.setFlag(true);
+            result.setMessage(MessageConstant.DELETE_CHECKGROUP_SUCCESS);
+            result.setData(null);
+        } catch (Exception ex) {
+            //业务逻辑处理异常
+            //提示失败信息
+            result.setFlag(false);
+            result.setMessage(MessageConstant.DELETE_CHECKGROUP_FAIL);
+            result.setData(null);
+        }
+        return result;
+    }
 }

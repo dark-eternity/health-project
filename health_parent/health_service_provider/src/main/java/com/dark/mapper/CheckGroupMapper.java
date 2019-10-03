@@ -28,4 +28,7 @@ public interface CheckGroupMapper {
 
     @Select("select * from t_checkgroup")
     List<CheckGroup> findAll();
+
+    @Delete("delete from t_checkgroup where id = #{value}")
+    void delete(Integer id);
 }

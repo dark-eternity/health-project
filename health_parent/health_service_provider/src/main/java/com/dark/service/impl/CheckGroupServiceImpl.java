@@ -129,4 +129,13 @@ public class CheckGroupServiceImpl implements CheckGroupService {
         List<CheckGroup> list = checkGroupMapper.findAll();
         return list;
     }
+
+    @Override
+    public void deleteById(Integer id) {
+        //调用mapper
+        //删除中间表中指定检查组id对应的检查项间的关联
+        checkGroupMapper.deleteAnnoItem(id);
+        //删除检查组表中的指定id的数据
+        checkGroupMapper.delete(id);
+    }
 }
