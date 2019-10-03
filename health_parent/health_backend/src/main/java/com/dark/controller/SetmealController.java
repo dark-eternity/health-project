@@ -2,6 +2,7 @@ package com.dark.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.dark.constant.MessageConstant;
+import com.dark.constant.RedisConstant;
 import com.dark.entity.PageResult;
 import com.dark.entity.QueryPageBean;
 import com.dark.entity.Result;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import redis.clients.jedis.JedisPool;
 
 import java.util.UUID;
 
@@ -27,6 +29,8 @@ public class SetmealController {
     private Result result;
     @Autowired
     private PageResult pageResult;
+    @Autowired
+    private JedisPool jedisPool;
 
     @RequestMapping(path = "/upload")
     public Result upload(@RequestParam(name = "imgFile") MultipartFile image) {
@@ -46,6 +50,8 @@ public class SetmealController {
             result.setFlag(true);
             result.setMessage(MessageConstant.PIC_UPLOAD_SUCCESS);
             result.setData(fileName);
+            //将上传成功的文件的文件名保存到redis的set集合中
+            jedisPool.getResource().sadd(RedisConstant.SETMEAL_PIC_RESOURCES, fileName);
         } catch (Exception ex) {
             //图片上传失败
             //设置响应信息
@@ -65,6 +71,8 @@ public class SetmealController {
             result.setFlag(true);
             result.setMessage(MessageConstant.ADD_SETMEAL_SUCCESS);
             result.setData(null);
+            //将添加成功的套餐信息中的文件的文件名保存到redis的set集合中
+            jedisPool.getResource().sadd(RedisConstant.SETMEAL_PIC_DB_RESOURCES, setmeal.getImg());
         } catch (Exception ex) {
             //业务逻辑处理异常
             //设置响应信息
@@ -89,5 +97,6 @@ public class SetmealController {
         }
     }
 
-    public void xxx() {}
+    public void xxx() {
+    }
 }
