@@ -8,7 +8,7 @@ import com.dark.entity.QueryPageBean;
 import com.dark.entity.Result;
 import com.dark.pojo.Setmeal;
 import com.dark.service.SetmealService;
-import com.dark.utils.ALiYun_uploadUtils;
+import com.dark.utils.ALiYun_FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,7 +45,7 @@ public class SetmealController {
             //生成唯一文件名
             String fileName = UUID.randomUUID().toString() + "." + extension;
             //使用工具类上传文件
-            ALiYun_uploadUtils.upload("practice02", fileName, bytes);
+            ALiYun_FileUtils.upload("practice02", fileName, bytes);
             //设置响应数据
             result.setFlag(true);
             result.setMessage(MessageConstant.PIC_UPLOAD_SUCCESS);

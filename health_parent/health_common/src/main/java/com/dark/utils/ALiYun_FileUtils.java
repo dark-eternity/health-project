@@ -10,8 +10,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
-//阿里云文件上传工具类
-public class ALiYun_uploadUtils {
+//阿里云文件处理工具类
+public class ALiYun_FileUtils {
     /**
      * 上传文件-byte数组
      *
