@@ -25,9 +25,9 @@ public class ClearImgJob {
             //set --> list
             List<String> fileList = new ArrayList<>(subSet);
             //清除阿里云存储空间内的垃圾图片
-            ALiYun_FileUtils.delete("practice01", fileList);
+            ALiYun_FileUtils.delete("practice02", fileList);
             //清除大set集合中的垃圾图片名称
-            String[] fileArray = (String[]) fileList.toArray();
+            String[] fileArray = fileList.toArray(new String[]{});
             jedisPool.getResource().srem(RedisConstant.SETMEAL_PIC_RESOURCES, fileArray);
         }
     }

@@ -125,7 +125,7 @@ public class ALiYun_FileUtils {
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
 
         // 删除文件。
-        DeleteObjectsResult deleteObjectsResult = ossClient.deleteObjects(new DeleteObjectsRequest(bucketName).withKeys(fileNames).withEncodingType("UTF-8"));
+        DeleteObjectsResult deleteObjectsResult = ossClient.deleteObjects(new DeleteObjectsRequest(bucketName).withKeys(fileNames));
         List<String> deletedObjects = deleteObjectsResult.getDeletedObjects();
 
         // 关闭OSSClient。

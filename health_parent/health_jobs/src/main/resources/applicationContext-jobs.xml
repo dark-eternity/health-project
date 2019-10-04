@@ -16,6 +16,9 @@
 			    http://www.springframework.org/schema/mvc
 			    http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
+    <!--注解驱动-->
+    <context:component-scan base-package="com.dark.jobs"/>
+
     <!-- 注册自定义Job -->
     <bean id="clearImgJob" class="com.dark.jobs.ClearImgJob"/>
     <!-- 注册JobDetail,作用是负责通过反射调用指定的Job -->
