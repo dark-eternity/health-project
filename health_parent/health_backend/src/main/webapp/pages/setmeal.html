@@ -104,7 +104,7 @@
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button type="primary" size="mini">编辑</el-button>
-                        <el-button size="mini" type="danger">删除</el-button>
+                        <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -363,6 +363,45 @@
             handleCurrentChange(currentPage) {
                 this.pagination.currentPage = currentPage;
                 this.findPage();
+            },
+            //删除记录
+            handleDelete(row) {
+                this.$confirm('你确定删除该条套餐信息???', '询问', {
+                    confirmButtonText: '没错',
+                    cancelButtonText: '再想想',
+                    type: 'warning'
+                }).then(() => {
+                    //点击确认按钮
+                    //发送异步请求，根据id删除套餐记录
+                    axios.post("/setmeal/delete.do", {
+                        id: row.id,
+                        img: row.img
+                    }).then((response) => {
+                        //请求成功
+                        if (response.data.flag) {
+                            //删除成功
+                            //提示成功信息
+                            this.$message.success(response.data.message);
+                        } else {
+                            //删除失败
+                            //提示错误信息
+                            this.$message.error(response.data.message);
+                        }
+                    }).catch(() => {
+                        //请求失败
+                        //提示错误信息
+                        this.$message.error("服务器正忙！请稍后再试~~");
+                    }).finally(() => {
+                        //刷新页面，调用查询
+                        this.findPage();
+                    })
+                }).catch(() => {
+                    //点击取消按钮
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             }
         }
     })

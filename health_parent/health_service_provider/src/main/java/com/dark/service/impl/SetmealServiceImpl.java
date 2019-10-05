@@ -76,6 +76,15 @@ public class SetmealServiceImpl implements SetmealService {
         }
     }
 
+    @Override
+    public void deleteById(Integer id) {
+        //调用mapper
+        //删除中间表中套餐id与检查组间的联系
+        setmealMapper.deleteMealAnnoGroup(id);
+        //删除套餐表中id对应的数据
+        setmealMapper.deleteById(id);
+    }
+
     private void addMealAnnoGroup(Integer id, Integer[] checkgroupIds) {
         //调用mapper
         //封装id与ids数组为list集合

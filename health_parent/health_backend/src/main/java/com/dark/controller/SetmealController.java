@@ -50,7 +50,7 @@ public class SetmealController {
             result.setFlag(true);
             result.setMessage(MessageConstant.PIC_UPLOAD_SUCCESS);
             result.setData(fileName);
-            //将上传成功的文件的文件名保存到redis的set集合中
+            //将上传成功的文件的文件名保存到redis的set大集合中
             jedisPool.getResource().sadd(RedisConstant.SETMEAL_PIC_RESOURCES, fileName);
         } catch (Exception ex) {
             //图片上传失败
@@ -71,7 +71,7 @@ public class SetmealController {
             result.setFlag(true);
             result.setMessage(MessageConstant.ADD_SETMEAL_SUCCESS);
             result.setData(null);
-            //将添加成功的套餐信息中的文件的文件名保存到redis的set集合中
+            //将添加成功的套餐信息中的文件的文件名保存到redis的set小集合中
             jedisPool.getResource().sadd(RedisConstant.SETMEAL_PIC_DB_RESOURCES, setmeal.getImg());
         } catch (Exception ex) {
             //业务逻辑处理异常
@@ -97,6 +97,24 @@ public class SetmealController {
         }
     }
 
-    public void xxx() {
+    @RequestMapping(path = "/delete")
+    public Result delete(@RequestBody Setmeal setmeal) {
+        try {
+            //业务逻辑处理正常
+            setmealService.deleteById(setmeal.getId());
+            //设置正确响应信息
+            result.setFlag(true);
+            result.setMessage("套餐信息删除成功！");
+            result.setData(null);
+            //删除redis连接池中set小集合内的指定套餐对应的文件名
+            jedisPool.getResource().srem(RedisConstant.SETMEAL_PIC_DB_RESOURCES, setmeal.getImg());
+        } catch (Exception ex) {
+            //业务逻辑处理异常
+            //设置错误响应信息
+            result.setFlag(false);
+            result.setMessage("套餐信息删除失败！");
+            result.setData(null);
+        }
+        return result;
     }
 }
