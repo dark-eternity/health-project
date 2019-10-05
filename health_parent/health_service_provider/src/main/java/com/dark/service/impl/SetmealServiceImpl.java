@@ -85,6 +85,39 @@ public class SetmealServiceImpl implements SetmealService {
         setmealMapper.deleteById(id);
     }
 
+    @Override
+    public List<Integer> findMealAnnoGroup(Integer id) {
+        //调用mapper
+        if (id != null && id > 0) {
+            return setmealMapper.findMealAnnoGroup(id);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void update(Integer[] checkgroupIds, Setmeal setmeal) {
+        //调用mapper
+        //更改套餐表中指定id对应的数据
+        setmealMapper.update(setmeal);
+        //更改中间表中指定id对应的检查组联系
+        updateMealAnnoGroup(setmeal.getId(), checkgroupIds);
+    }
+
+    @Override
+    public Setmeal findById(Integer id) {
+        //调用mapper
+        Setmeal setmeal = setmealMapper.findById(id);
+        return setmeal;
+    }
+
+    private void updateMealAnnoGroup(Integer id, Integer[] checkgroupIds) {
+        //删除指定id对应的检查组联系
+        setmealMapper.deleteMealAnnoGroup(id);
+        //新增指定id对应的指定检查组联系
+        addMealAnnoGroup(id, checkgroupIds);
+    }
+
     private void addMealAnnoGroup(Integer id, Integer[] checkgroupIds) {
         //调用mapper
         //封装id与ids数组为list集合

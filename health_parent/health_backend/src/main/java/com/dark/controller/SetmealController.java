@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import redis.clients.jedis.JedisPool;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -113,6 +114,66 @@ public class SetmealController {
             //设置错误响应信息
             result.setFlag(false);
             result.setMessage("套餐信息删除失败！");
+            result.setData(null);
+        }
+        return result;
+    }
+
+    @RequestMapping(path = "/findMealAnnoGroup")
+    public Result findMealAnnoGroup(Integer id) {
+        try {
+            //业务逻辑处理正常
+            List<Integer> list = setmealService.findMealAnnoGroup(id);
+            //设置正确响应数据
+            result.setFlag(true);
+            result.setMessage(MessageConstant.QUERY_SETMEAL_SUCCESS);
+            result.setData(list);
+        } catch (Exception ex) {
+            //业务逻辑处理异常
+            //设置错误响应信息
+            result.setFlag(false);
+            result.setMessage(MessageConstant.QUERY_SETMEAL_FAIL);
+            result.setData(null);
+        }
+        return result;
+    }
+
+    @RequestMapping(path = "/update")
+    public Result update(Integer[] checkgroupIds, @RequestBody Setmeal setmeal) {
+        try {
+            //根据id获取对应的旧套餐数据
+            Setmeal oldSetmeal = setmealService.findById(setmeal.getId());
+            //业务逻辑处理正常
+            setmealService.update(checkgroupIds, setmeal);
+            //设置正确响应信息
+            result.setFlag(true);
+            result.setMessage("套餐信息更改成功！");
+            result.setData(null);
+            //判断图片是否更改
+            String oldImg = oldSetmeal.getImg();
+            String newImg = setmeal.getImg();
+            //新照存
+            if (newImg != null && newImg.length() > 0) {
+                //老照存
+                if (oldImg != null && oldImg.length() > 0) {
+                    //照片更改
+                    if (!oldImg.equals(newImg)) {
+                        //删除redis中的set小集合中指定的旧图片名数据
+                        jedisPool.getResource().srem(RedisConstant.SETMEAL_PIC_DB_RESOURCES, oldImg);
+                        //往redis中的set小集合中添加新图片名数据
+                        jedisPool.getResource().sadd(RedisConstant.SETMEAL_PIC_DB_RESOURCES, newImg);
+                    }
+                } else {
+                    //老照无
+                    //往redis中的set小集合中添加新图片名数据
+                    jedisPool.getResource().sadd(RedisConstant.SETMEAL_PIC_DB_RESOURCES, newImg);
+                }
+            }
+        } catch (Exception ex) {
+            //业务逻辑处理异常
+            //设置错误响应信息
+            result.setFlag(false);
+            result.setMessage("套餐信息更改失败！");
             result.setData(null);
         }
         return result;

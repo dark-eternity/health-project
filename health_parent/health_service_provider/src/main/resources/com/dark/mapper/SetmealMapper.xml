@@ -31,6 +31,40 @@
         update user set password = #{password} where username = #{username}
     </update>-->
 
+    <update id="update" parameterType="setmeal">
+        update t_setmeal
+        <set>
+            <if test="name != null and name.length > 0">
+                name = #{name},
+            </if>
+            <if test="code != null and code.length > 0">
+                code = #{code},
+            </if>
+            <if test="helpCode != null and helpCode.length > 0">
+                helpCode = #{helpCode},
+            </if>
+            <if test="sex != null and sex.length > 0">
+                sex = #{sex},
+            </if>
+            <if test="age != null and age.length > 0">
+                age = #{age},
+            </if>
+            <if test="price != null and price > 0">
+                price = #{price},
+            </if>
+            <if test="remark != null and remark.length > 0">
+                remark = #{remark},
+            </if>
+            <if test="attention != null and attention.length > 0">
+                attention = #{attention},
+            </if>
+            <if test="img != null and img.length > 0">
+                img = #{img},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
     <!--查.模板-->
     <!--<select id="find" parameterType="" resultType="">
         select * from user
