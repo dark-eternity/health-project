@@ -27,4 +27,7 @@ public interface SetmealMapper {
 
     @Select("select * from t_setmeal where id = #{value}")
     Setmeal findById(Integer id);
+
+    @Select("select * from t_setmeal")
+    List<Setmeal> findAll();
 }

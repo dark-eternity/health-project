@@ -18,4 +18,8 @@ public interface SetmealService {
     void update(Integer[] checkgroupIds, Setmeal setmeal);
 
     Setmeal findById(Integer id);
+
+    List<Setmeal> findAll();
+
+    Setmeal findMsg(Integer id);
 }

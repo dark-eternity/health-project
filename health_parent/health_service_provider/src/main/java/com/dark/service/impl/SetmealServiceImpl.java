@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.dark.entity.PageResult;
 import com.dark.entity.QueryPageBean;
 import com.dark.mapper.SetmealMapper;
+import com.dark.pojo.CheckGroup;
 import com.dark.pojo.Setmeal;
 import com.dark.service.SetmealService;
 import com.github.pagehelper.Page;
@@ -109,6 +110,22 @@ public class SetmealServiceImpl implements SetmealService {
         //调用mapper
         Setmeal setmeal = setmealMapper.findById(id);
         return setmeal;
+    }
+
+    @Override
+    public List<Setmeal> findAll() {
+        //调用mapper
+        List<Setmeal> list = setmealMapper.findAll();
+        return list;
+    }
+
+    @Override
+    public Setmeal findMsg(Integer id) {
+        Setmeal byId = findById(id);
+        List<Integer> mealAnnoGroup = findMealAnnoGroup(id);
+        List<CheckGroup> list = checkGroupService.findByIds(mealAnnoGroup);
+        byId.setCheckGroups(list);
+        return null;
     }
 
     private void updateMealAnnoGroup(Integer id, Integer[] checkgroupIds) {
