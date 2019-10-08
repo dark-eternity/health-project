@@ -98,7 +98,7 @@
             }
         },
         mounted() {
-            axios.post("/setmeal/findById.do?id=" + id).then((response) => {
+            axios.post("/setmeal/findMsg.do?id=" + id).then((response) => {
                 //请求成功
                 if (response.data.flag) {
                     //获取数据成功

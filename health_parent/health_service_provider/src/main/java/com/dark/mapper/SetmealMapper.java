@@ -30,4 +30,6 @@ public interface SetmealMapper {
 
     @Select("select * from t_setmeal")
     List<Setmeal> findAll();
+
+    Setmeal findMsg(Integer id);
 }

@@ -121,11 +121,9 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Override
     public Setmeal findMsg(Integer id) {
-        Setmeal byId = findById(id);
-        List<Integer> mealAnnoGroup = findMealAnnoGroup(id);
-        List<CheckGroup> list = checkGroupService.findByIds(mealAnnoGroup);
-        byId.setCheckGroups(list);
-        return null;
+        //调用mapper
+        Setmeal setmeal = setmealMapper.findMsg(id);
+        return setmeal;
     }
 
     private void updateMealAnnoGroup(Integer id, Integer[] checkgroupIds) {

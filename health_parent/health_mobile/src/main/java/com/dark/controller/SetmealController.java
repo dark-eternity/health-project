@@ -184,7 +184,6 @@ public class SetmealController {
     }
 
 
-
     @RequestMapping(path = "/getSetmeal")
     public Result getSetmeal() {
         try {
@@ -204,8 +203,8 @@ public class SetmealController {
         return result;
     }
 
-    @RequestMapping(path = "/findById")
-    public Result findById(Integer id) {
+    @RequestMapping(path = "/findMsg")
+    public Result findMsg(Integer id) {
         try {
             //业务逻辑处理正常
             Setmeal setmeal = setmealService.findMsg(id);
@@ -213,6 +212,25 @@ public class SetmealController {
             result.setFlag(true);
             result.setMessage(MessageConstant.QUERY_SETMEAL_SUCCESS);
             result.setData(setmeal);
+        } catch (Exception ex) {
+            //业务逻辑处理异常
+            //设置错误响应信息
+            result.setFlag(false);
+            result.setMessage(MessageConstant.QUERY_SETMEAL_FAIL);
+            result.setData(null);
+        }
+        return result;
+    }
+
+    @RequestMapping(path = "/findById")
+    public Result findById(Integer id) {
+        try {
+            //业务逻辑处理正常
+            Setmeal byId = setmealService.findById(id);
+            //设置正确响应数据
+            result.setFlag(true);
+            result.setMessage(MessageConstant.QUERY_SETMEAL_SUCCESS);
+            result.setData(byId);
         } catch (Exception ex) {
             //业务逻辑处理异常
             //设置错误响应信息

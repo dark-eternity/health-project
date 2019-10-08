@@ -79,4 +79,47 @@
         </where>
     </select>
 
+    <resultMap id="setmealMap" type="setmeal">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="code" column="code"/>
+        <result property="helpCode" column="helpCode"/>
+        <result property="sex" column="sex"/>
+        <result property="age" column="age"/>
+        <result property="price" column="price"/>
+        <result property="remark" column="remark"/>
+        <result property="attention" column="attention"/>
+        <result property="img" column="img"/>
+        <collection property="checkGroups" ofType="checkGroup">
+            <id property="id" column="cgid"/>
+            <result property="code" column="cgcode"/>
+            <result property="name" column="cgname"/>
+            <result property="helpCode" column="cghelpCode"/>
+            <result property="sex" column="cgsex"/>
+            <result property="remark" column="cgremark"/>
+            <result property="attention" column="cgattention"/>
+            <collection property="checkItems" ofType="checkItem">
+                <id property="id" column="ciid"/>
+                <result property="code" column="cicode"/>
+                <result property="name" column="ciname"/>
+                <result property="sex" column="cisex"/>
+                <result property="age" column="ciage"/>
+                <result property="price" column="ciprice"/>
+                <result property="type" column="citype"/>
+                <result property="remark" column="ciremark"/>
+                <result property="attention" column="ciattention"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="findMsg" parameterType="int" resultMap="setmealMap">
+        select sm.*,cg.id cgid,cg.name cgname,cg.remark cgremark,ci.id ciid,ci.name ciname
+        from t_setmeal sm
+        left join t_setmeal_checkgroup sg on sm.id = sg.setmeal_id
+        left join t_checkgroup cg on cg.id = sg.checkgroup_id
+        left join t_checkgroup_checkitem gi on gi.checkgroup_id = cg.id
+        left join t_checkitem ci on ci.id = gi.checkitem_id
+        where sm.id = #{value}
+    </select>
+
 </mapper>
