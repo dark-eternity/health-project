@@ -60,8 +60,8 @@ public class MemberController {
                 cookie.setMaxAge(60 * 60 * 15);
                 response.addCookie(cookie);
                 // 4、将会员信息保存到Redis，使用手机号作为key，保存时长为30分钟
-                String member_json = JSON.toJSON(member).toString();
-                jedisPool.getResource().setex(telephone, 30 * 60, member_json);
+                String member_redis = JSON.toJSONString(member);
+                jedisPool.getResource().setex(telephone, 15 * 60 * 60, member_redis);
             } else {
                 //验证码错误则登录失败
                 //设置错误响应信息
