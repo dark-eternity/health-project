@@ -145,7 +145,7 @@ public class SetmealServiceImpl implements SetmealService {
                 map.put("groupId", checkgroupId);
                 maps.add(map);
             }
+            setmealMapper.addMealAnnoGroup(maps);
         }
-        setmealMapper.addMealAnnoGroup(maps);
     }
 }

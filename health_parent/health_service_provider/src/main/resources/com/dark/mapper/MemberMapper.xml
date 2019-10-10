@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dark.mapper.MemberMapper">
+    <!--增.模板-->
+    <!--<insert id="add" parameterType="">
+        insert into user values (#{id},#{username},#{password})
+    </insert>-->
+
+    <insert id="add" parameterType="map">
+        insert into t_member(name,sex,idCard,phoneNumber,regTime) values(#{name},#{sex},#{idCard},#{telephone},#{regTime})
+        <selectKey resultType="int" keyProperty="id" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <insert id="addByMember" parameterType="member">
+        insert into t_member values(null,#{fileNumber},#{name},#{sex},#{idCard},#{phoneNumber},#{regTime},#{password},#{email},#{birthday},#{remark})
+    </insert>
+
+    <!--删.模板-->
+    <!--<delete id="delete" parameterType="">
+        delete from user where username = #{username}
+    </delete>-->
+
+    <!--改.模板-->
+    <!--<update id="update" parameterType="">
+        update user set password = #{password} where username = #{username}
+    </update>-->
+
+    <!--查.模板-->
+    <!--<select id="find" parameterType="" resultType="">
+        select * from user
+    </select>-->
+</mapper>

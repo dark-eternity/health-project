@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dark.mapper.OrderMapper">
+    <!--增.模板-->
+    <!--<insert id="add" parameterType="">
+        insert into user values (#{id},#{username},#{password})
+    </insert>-->
+
+    <insert id="setmealOrder" parameterType="map">
+        insert into t_order(member_id,orderDate,orderType,orderStatus,setmeal_id) values(#{member_id},#{orderDate},#{orderType},#{orderStatus},#{setmealId})
+        <selectKey resultType="int" keyProperty="id" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <insert id="add" parameterType="order">
+        insert into t_order(member_id,orderDate,orderType,orderStatus,setmeal_id) values(#{memberId},#{orderDate},#{orderType},#{orderStatus},#{setmealId})
+        <selectKey resultType="int" keyProperty="id" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <!--删.模板-->
+    <!--<delete id="delete" parameterType="">
+        delete from user where username = #{username}
+    </delete>-->
+
+    <!--改.模板-->
+    <!--<update id="update" parameterType="">
+        update user set password = #{password} where username = #{username}
+    </update>-->
+
+    <!--查.模板-->
+    <!--<select id="find" parameterType="" resultType="">
+        select * from user
+    </select>-->
+
+    <select id="findMsg" parameterType="int" resultType="map">
+        select tm.name member,ts.name setmeal,td.orderDate,td.orderType
+        from t_member tm,t_setmeal ts,t_order td
+        where tm.id = td.member_id and ts.id = td.setmeal_id and td.id = #{value}
+    </select>
+
+</mapper>

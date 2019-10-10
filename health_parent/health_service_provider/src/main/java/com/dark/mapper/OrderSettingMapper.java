@@ -21,4 +21,7 @@ public interface OrderSettingMapper {
 
     @Select("select * from t_ordersetting where orderDate between #{begin} and #{end}")
     List<OrderSetting> findByMonth(Map<String, String> map);
+
+    @Update("update t_ordersetting set reservations = #{reservations} where orderDate = #{orderDate}")
+    void updateReservations(OrderSetting byDate);
 }

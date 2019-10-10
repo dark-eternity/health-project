@@ -14,7 +14,7 @@ import com.aliyuncs.profile.DefaultProfile;
  */
 public class SMSUtils {
     public static final String VALIDATE_CODE = "SMS_175051352";//发送短信验证码
-    public static final String ORDER_NOTICE = "SMS_159771588";//体检预约成功通知
+    public static final String ORDER_NOTICE = "SMS_175175741";//体检预约成功通知
 
 //	/**
 //	 * 发送短信
@@ -61,11 +61,10 @@ public class SMSUtils {
 //		}
 //	}
 
-    //阿里云-发短信
-    public static void sendMessage(String phone, String code) {
+    //阿里云-发验证码
+    public static void sendCode(String phone, String template, String code) {
         DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "LTAI4FghAjbhHn4fAkimSrSQ", "vHJbKH1k7IcZeJ05s2WZ4SCuF9mZwH");
         IAcsClient client = new DefaultAcsClient(profile);
-
         CommonRequest request = new CommonRequest();
         request.setMethod(MethodType.POST);
         request.setDomain("dysmsapi.aliyuncs.com");
@@ -74,8 +73,32 @@ public class SMSUtils {
         request.putQueryParameter("RegionId", "cn-hangzhou");
         request.putQueryParameter("PhoneNumbers", phone);
         request.putQueryParameter("SignName", "传智健康管理系统");
-        request.putQueryParameter("TemplateCode", "SMS_175051352");
+        request.putQueryParameter("TemplateCode", template);
         request.putQueryParameter("TemplateParam", "{\"dark66\":\"" + code + "\"}");
+        try {
+            CommonResponse response = client.getCommonResponse(request);
+            System.out.println(response.getData());
+        } catch (ServerException e) {
+            e.printStackTrace();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //阿里云-发通知短信
+    public static void sendMessage(String phone, String template, String date) {
+        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "LTAI4FghAjbhHn4fAkimSrSQ", "vHJbKH1k7IcZeJ05s2WZ4SCuF9mZwH");
+        IAcsClient client = new DefaultAcsClient(profile);
+        CommonRequest request = new CommonRequest();
+        request.setMethod(MethodType.POST);
+        request.setDomain("dysmsapi.aliyuncs.com");
+        request.setVersion("2017-05-25");
+        request.setAction("SendSms");
+        request.putQueryParameter("RegionId", "cn-hangzhou");
+        request.putQueryParameter("PhoneNumbers", phone);
+        request.putQueryParameter("SignName", "传智健康管理系统");
+        request.putQueryParameter("TemplateCode", template);
+        request.putQueryParameter("TemplateParam", "{\"orderDate\":\"" + date + "\"}");
         try {
             CommonResponse response = client.getCommonResponse(request);
             System.out.println(response.getData());
