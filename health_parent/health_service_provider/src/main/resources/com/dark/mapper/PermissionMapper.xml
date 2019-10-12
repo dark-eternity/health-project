@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dark.mapper.PermissionMapper">
+    <!--增.模板-->
+    <!--<insert id="add" parameterType="">
+        insert into user values (#{id},#{username},#{password})
+    </insert>-->
+
+    <!--删.模板-->
+    <!--<delete id="delete" parameterType="">
+        delete from user where username = #{username}
+    </delete>-->
+
+    <!--改.模板-->
+    <!--<update id="update" parameterType="">
+        update user set password = #{password} where username = #{username}
+    </update>-->
+
+    <!--查.模板-->
+    <!--<select id="find" parameterType="" resultType="">
+        select * from user
+    </select>-->
+
+    <select id="findByRoleId" parameterType="int" resultType="permission">
+        SELECT p.*
+        FROM t_permission p,t_role_permission rp
+        WHERE p.id = rp.permission_id AND rp.role_id = #{value}
+    </select>
+
+</mapper>

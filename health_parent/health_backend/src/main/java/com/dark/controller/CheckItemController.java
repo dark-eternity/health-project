@@ -8,6 +8,7 @@ import com.dark.entity.Result;
 import com.dark.pojo.CheckItem;
 import com.dark.service.CheckItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +25,7 @@ public class CheckItemController {
     @Autowired
     private PageResult pageResult;
 
+    @PreAuthorize("hasAuthority('CHECKITEM_ADD')")
     @RequestMapping(path = "/addCheck")
     public Result addCheck(@RequestBody CheckItem checkItem) {
         try {
@@ -41,6 +43,7 @@ public class CheckItemController {
         return result;
     }
 
+    @PreAuthorize("hasAuthority('CHECKITEM_QUERY')")
     @RequestMapping(path = "/findByPage")
     public PageResult findByPage(@RequestBody QueryPageBean queryPageBean) {
         try {
@@ -53,6 +56,7 @@ public class CheckItemController {
         }
     }
 
+    @PreAuthorize("hasAuthority('CHECKITEM_QUERY')")
     @RequestMapping(path = "findById")
     public Result findById(Integer id) {
         try {
@@ -71,6 +75,7 @@ public class CheckItemController {
         return result;
     }
 
+    @PreAuthorize("hasAuthority('CHECKITEM_EDIT')")
     @RequestMapping(path = "/update")
     public Result update(@RequestBody CheckItem checkItem) {
         try {
@@ -88,6 +93,7 @@ public class CheckItemController {
         return result;
     }
 
+    @PreAuthorize("hasAuthority('CHECKITEM_DELETE')")
     @RequestMapping(path = "/deleteById")
     public Result deleteById(Integer id) {
         try {
@@ -105,6 +111,7 @@ public class CheckItemController {
         return result;
     }
 
+    @PreAuthorize("hasAuthority('CHECKITEM_QUERY')")
     @RequestMapping(path = "/findAll")
     public Result findAll() {
         try {

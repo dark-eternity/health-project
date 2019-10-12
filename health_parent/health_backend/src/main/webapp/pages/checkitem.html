@@ -348,7 +348,7 @@
                     //确认删除
                     //发送异步请求，根据id删除数据
                     axios.post("/checkitem/deleteById.do?id=" + row.id).then((response) => {
-                        //判断响应结果
+                        //请求成功，判断响应结果
                         if (response.data.flag) {
                             //删除成功，提示信息
                             this.$message.success(response.data.message);
@@ -356,9 +356,15 @@
                             //删除失败，提示信息
                             this.$message.error(response.data.message);
                         }
-                    }).catch(() => {
-                        //发生异常，提示信息
-                        this.$message.error("删除失败！");
+                    }).catch((resp) => {
+                        //请求失败，发生异常，提示信息
+                        if (resp == 'Error: Request failed with status code 403') {
+                            //权限不足，无法访问
+                            this.$message.error("权限不足，无法进行相应操作！");
+                        } else {
+                            //其他异常
+                            this.$message.error("服务器正忙！请稍后再试~~");
+                        }
                     }).finally(() => {
                         //刷新页面
                         this.findPage();
