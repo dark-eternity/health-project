@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dark.mapper.ReportMapper">
+    <!--增.模板-->
+    <!--<insert id="add" parameterType="">
+        insert into user values (#{id},#{username},#{password})
+    </insert>-->
+
+    <!--删.模板-->
+    <!--<delete id="delete" parameterType="">
+        delete from user where username = #{username}
+    </delete>-->
+
+    <!--改.模板-->
+    <!--<update id="update" parameterType="">
+        update user set password = #{password} where username = #{username}
+    </update>-->
+
+    <!--查.模板-->
+    <!--<select id="find" parameterType="" resultType="">
+        select * from user
+    </select>-->
+
+    <select id="findMemberCountByOrders" parameterType="java.util.Date" resultType="java.util.HashMap">
+        SELECT
+        <foreach collection="list" item="item" separator="," index="index">
+            (SELECT COUNT(m#{index}.id) FROM t_member m#{index} WHERE m#{index}.regTime <![CDATA[<=]]> #{item})
+            count#{index}
+        </foreach>
+        FROM t_member WHERE id = 1
+    </select>
+
+    <select id="findSetmealOrder" resultType="java.util.Map">
+        SELECT
+        COUNT(o.id) value
+        ,s.name name
+        ,COUNT(o.id)/(SELECT COUNT(od.id) FROM t_order od,t_setmeal sm WHERE od.setmeal_id = sm.id) proportion
+        FROM t_order o,t_setmeal s WHERE o.setmeal_id = s.id GROUP BY o.setmeal_id
+    </select>
+
+    <select id="findBusinessReport" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+	(SELECT COUNT(id) FROM t_member WHERE regTime = #{today}) todayNewMember
+	,(SELECT COUNT(id) FROM t_member) totalMember
+	,(SELECT COUNT(id) FROM t_member WHERE regTime BETWEEN #{monday} AND #{today}) thisWeekNewMember
+	,(SELECT COUNT(id) FROM t_member WHERE regTime BETWEEN #{first} AND #{today}) thisMonthNewMember
+	,(SELECT COUNT(id) FROM t_order WHERE orderDate = #{today}) todayOrderNumber
+	,(SELECT COUNT(id) FROM t_order WHERE orderDate = #{today} AND orderStatus = '已到诊') todayVisitsNumber
+	,(SELECT COUNT(id) FROM t_order WHERE orderDate BETWEEN #{monday} AND #{today}) thisWeekOrderNumber
+	,(SELECT COUNT(id) FROM t_order WHERE orderDate BETWEEN #{monday} AND #{today} AND orderStatus = '已到诊') thisWeekVisitsNumber
+	,(SELECT COUNT(id) FROM t_order WHERE orderDate BETWEEN #{first} AND #{today}) thisMonthOrderNumber
+	,(SELECT COUNT(id) FROM t_order WHERE orderDate BETWEEN #{first} AND #{today} AND orderStatus = '已到诊') thisMonthVisitsNumber
+	FROM t_member WHERE regTime = #{today}
+    </select>
+
+</mapper>

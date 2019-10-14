@@ -20,7 +20,7 @@
 
     <dubbo:application name="health_service_provider"/>
     <dubbo:protocol name="dubbo" port="20886"/>
-    <dubbo:registry address="zookeeper://192.168.139.1:2181"/>
+    <dubbo:registry address="zookeeper://192.168.1.97:2181"/>
     <!--
         alibaba包下面的@Service注解
      -->
