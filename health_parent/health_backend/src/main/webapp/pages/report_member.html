@@ -27,6 +27,19 @@
     </div>
     <div class="app-container">
         <div class="box">
+            <!--日历控件-->
+            <div id="time">
+                <label for="begin">起始时间点</label>
+                --
+                <input id="begin" type="date" v-model="formData.beginTime">
+                _______________________
+                <label for="end">结束时间点</label>
+                --
+                <input id="end" type="date" v-model="formData.endTime">
+                _______________________
+                <button type="button" @click="orderFind()">查看</button>
+            </div>
+            <br/>
             <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
             <div id="chart1" style="height:600px;"></div>
         </div>
@@ -44,45 +57,109 @@
 
     // 使用刚指定的配置项和数据显示图表。
     //myChart.setOption(option);
-
-    //发送异步请求过去会员统计数据
-    axios.get("/report/getMemberReport.do").then((res) => {
-        //请求成功
-        if (res.data.flag) {
-            //获取会员统计数据成功
-            //提示成功信息
-            // this.$message.success(res.data.message);
-            //echarts设置数据
-            myChart1.setOption(
-                {
-                    title: {
-                        text: '会员数量'
-                    },
-                    tooltip: {},
-                    legend: {
-                        data: ['会员数量']
-                    },
-                    xAxis: {
-                        data: res.data.data.months
-                    },
-                    yAxis: {
-                        type: 'value'
-                    },
-                    series: [{
-                        name: '会员数量',
-                        type: 'line',
-                        data: res.data.data.memberCount
-                    }]
+    var vue = new Vue({
+        el: '#time',
+        data: {
+            formData: {
+                beginTime: '',
+                endTime: ''
+            }
+        },
+        created() {
+            //发送异步请求过去会员统计数据
+            axios.get("/report/getMemberReport.do").then((res) => {
+                //请求成功
+                if (res.data.flag) {
+                    //获取会员统计数据成功
+                    //提示成功信息
+                    this.$message.success(res.data.message);
+                    //echarts设置数据
+                    myChart1.setOption(
+                        {
+                            title: {
+                                text: '会员数量'
+                            },
+                            tooltip: {},
+                            legend: {
+                                data: ['会员数量']
+                            },
+                            xAxis: {
+                                data: res.data.data.months
+                            },
+                            yAxis: {
+                                type: 'value'
+                            },
+                            series: [{
+                                name: '会员数量',
+                                type: 'line',
+                                data: res.data.data.memberCount
+                            }]
+                        });
+                } else {
+                    //获取会员统计数据失败
+                    //提示失败信息
+                    this.$message.error(res.data.message);
+                }
+            }).catch((res) => {
+                //请求失败
+                //提示失败信息
+                this.$message.error("服务器正忙！请稍后再试~~");
+            })
+        },
+        methods: {
+            orderFind() {
+                //获取输入的日期
+                var bt = this.formData.beginTime;
+                var et = this.formData.endTime;
+                //校验日期输入
+                if (bt == '' || et == '') {
+                    this.$message.error("请输入有效的查询日期！");
+                    return false;
+                }
+                //发送异步请求，根据输入的时间段查询会员数量展示折线图
+                axios.post("/report/getMemberReportByDate.do", {
+                    "beginTime": bt,
+                    "endTime": et
+                }).then((response) => {
+                    //请求成功
+                    if (response.data.flag) {
+                        //查询会员数量成功
+                        //提示成功信息
+                        this.$message.success(response.data.message);
+                        //echarts设置数据
+                        myChart1.setOption(
+                            {
+                                title: {
+                                    text: '会员数量'
+                                },
+                                tooltip: {},
+                                legend: {
+                                    data: ['会员数量']
+                                },
+                                xAxis: {
+                                    data: response.data.data.months
+                                },
+                                yAxis: {
+                                    type: 'value'
+                                },
+                                series: [{
+                                    name: '会员数量',
+                                    type: 'line',
+                                    data: response.data.data.memberCount
+                                }]
+                            });
+                    } else {
+                        //查询会员数量失败
+                        //提示失败信息
+                        this.$message.error(response.data.message);
+                    }
+                }).catch((res) => {
+                    //请求失败
+                    //提示失败信息
+                    this.$message.error("服务器正忙！请稍后再试~~");
                 });
-        } else {
-            //获取会员统计数据失败
-            //提示失败信息
-            // this.$message.error(res.data.message);
+            }
         }
-    }).catch((res) => {
-        //请求失败
-        //提示失败信息
-        // this.$message.error("服务器正忙！请稍后再试~~");
-    })
+    });
 </script>
 </html>

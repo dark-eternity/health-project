@@ -20,4 +20,61 @@
     <!--<select id="find" parameterType="" resultType="">
         select * from user
     </select>-->
+
+    <select id="findParentMenu" parameterType="string" resultType="menu">
+        SELECT
+	        m.id,m.name,m.path,m.priority,m.icon
+        FROM
+	        t_user u,t_user_role ur,t_role_menu rm,t_menu m
+        WHERE
+	        u.username = #{value} AND u.id = ur.user_id AND ur.role_id = rm.role_id AND rm.menu_id = m.id AND m.level = 1
+    </select>
+
+    <select id="findChildMenu" parameterType="int" resultType="menu">
+        SELECT
+            id,NAME,linkUrl
+        FROM
+            t_menu
+        WHERE
+            parentMenuId = #{value} AND LEVEL = 2
+    </select>
+
+    <select id="findChildMenuByIds" parameterType="int" resultType="menu">
+        SELECT
+        id,NAME,linkUrl,path,priority,parentMenuId
+        FROM
+        t_menu
+        <where>
+            parentMenuId IN
+            <foreach collection="list" item="pid" open="(" close=")" separator=",">
+                #{pid}
+            </foreach>
+            AND LEVEL = 2
+        </where>
+    </select>
+
+    <resultMap id="menuMap" type="com.dark.pojo.Menu">
+        <id property="id" column="m1id"/>
+        <result property="name" column="m1name"/>
+        <result property="path" column="m1path"/>
+        <result property="priority" column="m1priority"/>
+        <result property="icon" column="m1icon"/>
+        <collection property="children" ofType="com.dark.pojo.Menu">
+            <id property="id" column="m2id"/>
+            <result property="name" column="m2name"/>
+            <result property="linkUrl" column="m2linkUrl"/>
+            <result property="path" column="m2path"/>
+            <result property="priority" column="m2priority"/>
+        </collection>
+    </resultMap>
+
+    <select id="findAllByUsername" resultMap="menuMap" parameterType="string">
+        SELECT
+	        m1.id m1id,m1.name m1name,m1.path m1path,m1.priority m1priority,m1.icon m1icon,m2.id m2id,m2.name m2name,m2.linkUrl m2linkUrl,m2.path m2path,m2.priority m2priority
+        FROM
+	        t_user u,t_user_role ur,t_role_menu rm,t_menu m1,t_menu m2
+        WHERE
+	        u.username = #{value} AND u.id = ur.user_id AND ur.role_id = rm.role_id AND rm.menu_id = m1.id AND m1.id = m2.parentMenuId
+    </select>
+
 </mapper>

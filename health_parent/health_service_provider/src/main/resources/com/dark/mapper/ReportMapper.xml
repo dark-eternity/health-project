@@ -21,21 +21,28 @@
         select * from user
     </select>-->
 
-    <select id="findMemberCountByOrders" parameterType="java.util.Date" resultType="java.util.HashMap">
+    <select id="findMemberCountByOrders" parameterType="java.util.Date" resultType="java.util.LinkedHashMap">
         SELECT
         <foreach collection="list" item="item" separator="," index="index">
-            (SELECT COUNT(m#{index}.id) FROM t_member m#{index} WHERE m#{index}.regTime <![CDATA[<=]]> #{item})
+            (SELECT COUNT(id) FROM t_member WHERE regTime <![CDATA[<=]]> #{item})
             count#{index}
         </foreach>
-        FROM t_member WHERE id = 1
+        FROM
+            t_member
+        WHERE
+            id = 1
     </select>
 
     <select id="findSetmealOrder" resultType="java.util.Map">
         SELECT
-        COUNT(o.id) value
-        ,s.name name
-        ,COUNT(o.id)/(SELECT COUNT(od.id) FROM t_order od,t_setmeal sm WHERE od.setmeal_id = sm.id) proportion
-        FROM t_order o,t_setmeal s WHERE o.setmeal_id = s.id GROUP BY o.setmeal_id
+            COUNT(o.id) value
+            ,s.name name
+            ,COUNT(o.id)/(SELECT COUNT(od.id) FROM t_order od,t_setmeal sm WHERE od.setmeal_id = sm.id) proportion
+        FROM
+            t_order o,t_setmeal s
+        WHERE
+            o.setmeal_id = s.id
+        GROUP BY o.setmeal_id
     </select>
 
     <select id="findBusinessReport" parameterType="java.util.Map" resultType="java.util.Map">
@@ -51,6 +58,24 @@
 	,(SELECT COUNT(id) FROM t_order WHERE orderDate BETWEEN #{first} AND #{today}) thisMonthOrderNumber
 	,(SELECT COUNT(id) FROM t_order WHERE orderDate BETWEEN #{first} AND #{today} AND orderStatus = '已到诊') thisMonthVisitsNumber
 	FROM t_member WHERE regTime = #{today}
+    </select>
+
+    <select id="findMemberCountBySex" resultType="java.util.Map">
+        SELECT
+	(SELECT COUNT(id) FROM t_member WHERE sex = 1) 男性
+	,(SELECT COUNT(id) FROM t_member WHERE sex = 0) 女性
+    FROM t_member WHERE id = 1
+    </select>
+
+    <select id="findMemberCountByAge" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+	(SELECT COUNT(id) FROM t_member WHERE birthday BETWEEN #{time18} AND #{time00}) 0to18
+	,(SELECT COUNT(id) FROM t_member WHERE birthday BETWEEN #{time30} AND #{time18}) 18to30
+	,(SELECT COUNT(id) FROM t_member WHERE birthday BETWEEN #{time45} AND #{time30}) 30to45
+	,(SELECT COUNT(id) FROM t_member WHERE birthday BETWEEN #{time60} AND #{time45}) 45to60
+	,(SELECT COUNT(id) FROM t_member WHERE birthday BETWEEN #{time80} AND #{time60}) 60to80
+	,(SELECT COUNT(id) FROM t_member WHERE birthday BETWEEN #{time100} AND #{time80}) 80to100
+    FROM t_member WHERE id = 1
     </select>
 
 </mapper>

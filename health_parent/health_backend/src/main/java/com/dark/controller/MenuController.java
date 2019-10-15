@@ -5,6 +5,7 @@ import com.dark.entity.Result;
 import com.dark.pojo.Menu;
 import com.dark.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,8 +22,10 @@ public class MenuController {
     @RequestMapping(path = "/findAll")
     public Result findAll() {
         try {
+            //正常获取用户名
+            String name = SecurityContextHolder.getContext().getAuthentication().getName();
             //业务逻辑处理正常
-            List<Menu> list = menuService.findAll();
+            List<Menu> list = menuService.findAllByUsername(name);
             //设置正确响应数据
             result.setFlag(true);
             result.setMessage("菜单数据获取成功！");

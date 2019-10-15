@@ -5,11 +5,11 @@ import com.dark.constant.MessageConstant;
 import com.dark.entity.Result;
 import com.dark.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping(path = "/report")
@@ -93,6 +93,67 @@ public class ReportController {
             //设置错误响应信息
             result.setFlag(false);
             result.setMessage(MessageConstant.GET_BUSINESS_REPORT_FAIL);
+            result.setData(null);
+        }
+        return result;
+    }
+
+    @RequestMapping(path = "/getMemberReportBySex")
+    public Result getMemberReportBySex() {
+        //result{flag:x,message:x,data:[{name:'男性',value:5},{name:'女性',value:7}]}
+        try {
+            //获取会员数据成功
+            List<Map<String, Object>> list = reportService.findMemberReportBySex();
+            //设置成功响应数据
+            result.setFlag(true);
+            result.setMessage("会员数据获取成功！");
+            result.setData(list);
+        } catch (Exception ex) {
+            //获取会员数据失败
+            //设置失败响应信息
+            result.setFlag(false);
+            result.setMessage("会员数据获取失败！");
+            result.setData(null);
+        }
+        return result;
+    }
+
+    @RequestMapping(path = "/getMemberReportByAge")
+    public Result getMemberReportByAge() {
+        //result{flag:x,message:x,data:[{name:'0-18',value:5},{name:'18-30',value:7}...]}
+        try {
+            //根据年龄段查询会员数据成功
+            Map<String, List> map = reportService.findMemberReportByAge();
+            //设置成功响应数据
+            result.setFlag(true);
+            result.setMessage("会员数据查询成功！");
+            result.setData(map);
+        } catch (Exception ex) {
+            //根据年龄段查询会员数据失败
+            //设置失败响应数据
+            result.setFlag(false);
+            result.setMessage("会员数据查询失败！");
+            result.setData(null);
+        }
+        return result;
+    }
+
+    @RequestMapping(path = "/getMemberReportByDate")
+    public Result getMemberReportByDate(@RequestBody Map<String, Date> map) {
+        //获取beginTime到endTime中每月的会员数量统计
+        //data:{"months":["2018.05","2018.06"...],"memberCount":[100,200...]}
+        try {
+            //会员数据查询成功
+            Map<String, List> data = reportService.findMemberReportByDate(map);
+            //设置成功响应数据
+            result.setFlag(true);
+            result.setMessage("会员数据查询成功！");
+            result.setData(data);
+        } catch (Exception ex) {
+            //会员数据查询失败
+            //设置失败响应信息
+            result.setFlag(false);
+            result.setMessage("会员数据查询失败！");
             result.setData(null);
         }
         return result;

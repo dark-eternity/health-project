@@ -6,6 +6,10 @@
         insert into user values (#{id},#{username},#{password})
     </insert>-->
 
+    <insert id="add" parameterType="permission">
+        insert into t_permission(name,keyword,description) values (#{name},#{keyword},#{description})
+    </insert>
+
     <!--删.模板-->
     <!--<delete id="delete" parameterType="">
         delete from user where username = #{username}
@@ -16,6 +20,10 @@
         update user set password = #{password} where username = #{username}
     </update>-->
 
+    <update id="update" parameterType="permission">
+        update t_permission set name = #{name},keyword = #{keyword},description = #{description} where id = #{id}
+    </update>
+
     <!--查.模板-->
     <!--<select id="find" parameterType="" resultType="">
         select * from user
@@ -25,6 +33,15 @@
         SELECT p.*
         FROM t_permission p,t_role_permission rp
         WHERE p.id = rp.permission_id AND rp.role_id = #{value}
+    </select>
+
+    <select id="findByCondition" parameterType="string" resultType="permission">
+        select id,name,keyword,description from t_permission
+        <where>
+            <if test="value != null">
+                and name like #{value}
+            </if>
+        </where>
     </select>
 
 </mapper>
